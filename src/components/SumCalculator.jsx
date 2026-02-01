@@ -12,7 +12,7 @@ const SumCalculator = () => {
   const handleAddNumber = () => {
     const parsedNumber = parseInt(inputValue, 10);
     if (!isNaN(parsedNumber)) {
-      setNumbers((prevNumbers) => [...prevNumbers, parsedNumber]);
+      setNumbers((prev) => [...prev, parsedNumber]);
       setInputValue("");
     }
   };
@@ -21,42 +21,29 @@ const SumCalculator = () => {
     if (e.key === "Enter") handleAddNumber();
   };
 
-  // Asynchronous sum calculation using setTimeout
   useEffect(() => {
-    let isCancelled = false;
     const timeoutId = setTimeout(() => {
-      if (!isCancelled) {
-        const total = numbers.reduce((acc, num) => acc + num, 0);
-        setSum(total);
-      }
+      setSum(numbers.reduce((acc, num) => acc + num, 0));
     }, 0);
 
-    return () => {
-      isCancelled = true;
-      clearTimeout(timeoutId);
-    };
+    return () => clearTimeout(timeoutId);
   }, [numbers]);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h2>Sum Calculator</h2>
+    <div>
+      <h1>Sum Calculator</h1>
       <input
         type="number"
         value={inputValue}
         onChange={handleInputChange}
         onKeyPress={handleKeyPress}
         placeholder="Enter a number"
-        style={{ padding: "5px", marginRight: "10px" }}
       />
-      <button onClick={handleAddNumber} style={{ padding: "5px 10px" }}>
-        Add
-      </button>
-      <div style={{ marginTop: "20px" }}>
-        <strong>Numbers:</strong> {numbers.join(", ")}
-      </div>
-      <div style={{ marginTop: "10px" }}>
+      <button onClick={handleAddNumber}>Add</button>
+
+      <p>
         <strong>Total Sum:</strong> {sum}
-      </div>
+      </p>
     </div>
   );
 };
