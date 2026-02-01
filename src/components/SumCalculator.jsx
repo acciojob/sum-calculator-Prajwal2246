@@ -1,51 +1,41 @@
 import React, { useState, useEffect } from "react";
 
 const SumCalculator = () => {
-  const [numbers, setNumbers] = useState([]); // store all inputted numbers
-  const [inputValue, setInputValue] = useState(""); // store current input
-  const [sum, setSum] = useState(0); // store the running sum
+  const [numbers, setNumbers] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [sum, setSum] = useState(0);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  // Handle adding a new number
   const handleAddNumber = () => {
     const parsedNumber = parseInt(inputValue, 10);
     if (!isNaN(parsedNumber)) {
       setNumbers((prevNumbers) => [...prevNumbers, parsedNumber]);
-      setInputValue(""); // clear input
+      setInputValue("");
     }
   };
 
-  // Recalculate sum asynchronously whenever numbers change
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") handleAddNumber();
+  };
+
+  // Asynchronous sum calculation using setTimeout
   useEffect(() => {
     let isCancelled = false;
-
-    const calculateSumAsync = async () => {
-      // simulate asynchronous behavior
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      const total = numbers.reduce((acc, num) => acc + num, 0);
+    const timeoutId = setTimeout(() => {
       if (!isCancelled) {
+        const total = numbers.reduce((acc, num) => acc + num, 0);
         setSum(total);
       }
-    };
-
-    calculateSumAsync();
+    }, 0);
 
     return () => {
-      isCancelled = true; // cancel if component unmounts
+      isCancelled = true;
+      clearTimeout(timeoutId);
     };
   }, [numbers]);
-
-  // Optional: submit on Enter key
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleAddNumber();
-    }
-  };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
@@ -61,7 +51,6 @@ const SumCalculator = () => {
       <button onClick={handleAddNumber} style={{ padding: "5px 10px" }}>
         Add
       </button>
-
       <div style={{ marginTop: "20px" }}>
         <strong>Numbers:</strong> {numbers.join(", ")}
       </div>
