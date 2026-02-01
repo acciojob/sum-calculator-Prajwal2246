@@ -42,7 +42,7 @@ const SumCalculator = () => {
       <button onClick={handleAddNumber}>Add</button>
 
       <p>
-        <strong>Total Sum:</strong> {sum}
+        Sum: {sum}
       </p>
     </div>
   );
